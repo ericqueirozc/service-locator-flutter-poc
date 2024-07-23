@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/login/login_credentials.dart';
-import 'package:myapp/login/login_repository.dart';
+import 'package:myapp/login/domain/login_credentials.dart';
 
+import '../domain/login_respository.dart';
 import 'login_state.dart';
 
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:1395942664.
 class LoginStore extends ValueNotifier<LoginState> {
-  LoginStore() : super(CredentialUncheckedState());
+  final LoginRespository _loginRespository;
+
+  LoginStore(this._loginRespository) : super(CredentialUncheckedState());
 
   void setState(LoginState state) {
     value = state;
@@ -18,7 +19,7 @@ class LoginStore extends ValueNotifier<LoginState> {
       return;
     }
     setState(LoadingState());
-    final hasLogedSuccefully = await LoginRepository().login(loginCredentials);
+    final hasLogedSuccefully = await _loginRespository.login(loginCredentials);
     if (!hasLogedSuccefully) {
       setState(ErrorState());
       return;

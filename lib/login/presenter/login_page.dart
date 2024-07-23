@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/login/login_store.dart';
+import 'package:myapp/login/presenter/login_store.dart';
 
-import '../service_locator.dart';
-import 'login_credentials.dart';
+import '../../core/service_locator.dart';
+import '../domain/login_credentials.dart';
 import 'login_state.dart';
 
 class LoginPage extends StatefulWidget {

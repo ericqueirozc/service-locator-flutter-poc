@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/login/login_store.dart';
+import 'package:myapp/login/domain/login_respository.dart';
+import 'package:myapp/login/infra/login_repository_impl.dart';
+import 'package:myapp/login/presenter/login_store.dart';
 
-import 'login/login_page.dart';
-import 'service_locator.dart';
+import 'login/presenter/login_page.dart';
+import 'core/service_locator.dart';
 
 void main() {
-  ServiceLocator.registerSingleton<LoginStore>(LoginStore());
+  ServiceLocator.registerFactory<LoginRespository>(
+      () => LoginRepositoryImpl());
+  ServiceLocator.registerLazySingleton<LoginStore>(
+      () => LoginStore(ServiceLocator.get<LoginRespository>()));
 
   runApp(const MyApp());
 }
