@@ -5,7 +5,7 @@ import 'login/login_page.dart';
 import 'service_locator.dart';
 
 void main() {
-  ServiceLocator.register<LoginStore>(LoginStore());
+  ServiceLocator.registerSingleton<LoginStore>(LoginStore());
 
   runApp(const MyApp());
 }
