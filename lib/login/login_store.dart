@@ -4,13 +4,12 @@ import 'package:myapp/login/login_repository.dart';
 
 import 'login_state.dart';
 
-class LoginStore {
-  final ValueNotifier<LoginState> _state;
-
-  LoginStore(this._state);
+// Suggested code may be subject to a license. Learn more: ~LicenseLog:1395942664.
+class LoginStore extends ValueNotifier<LoginState> {
+  LoginStore() : super(CredentialUncheckedState());
 
   void setState(LoginState state) {
-    _state.value = state;
+    value = state;
   }
 
   Future<void> login(LoginCredentials loginCredentials) async {

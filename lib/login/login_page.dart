@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/login/login_store.dart';
+
+import '../service_locator.dart';
+import 'login_credentials.dart';
+import 'login_state.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -8,6 +13,56 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  late final LoginStore _loginStore;
+  late final Stream notificationListener;
+
+  @override
+  void initState() {
+    super.initState();
+    _loginStore = ServiceLocator.get<LoginStore>();
+    _loginStore.addListener(() {
+      final state = _loginStore.value;
+      if (state is SuccessState) {
+        Navigator.of(context).pushReplacementNamed('/home');
+        return;
+      }
+      if (state is ErrorState) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Error'),
+          ),
+        );
+        return;
+      }
+      if (state is InvalidCredentialsState) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Invalid credentials'),
+          ),
+        );
+        return;
+      }
+      if (state is LoadingState) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Loading'),
+          ),
+        );
+        return;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,21 +73,27 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: usernameController,
+                  decoration: const InputDecoration(
                     labelText: 'Username',
                   ),
                 ),
                 const SizedBox(height: 16.0),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(
                     labelText: 'Password',
                   ),
                 ),
                 const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
-                    // Add your login logic here
+                    final loginCrentials = LoginCredentials(
+                      username: usernameController.text,
+                      password: passwordController.text,
+                    );
+                    _loginStore.login(loginCrentials);
                   },
                   child: const Text('Login'),
                 ),

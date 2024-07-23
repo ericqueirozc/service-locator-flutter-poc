@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:myapp/login/login_store.dart';
 
 import 'login/login_page.dart';
+import 'service_locator.dart';
 
 void main() {
+  ServiceLocator.register<LoginStore>(LoginStore());
+
   runApp(const MyApp());
 }
 
@@ -17,7 +21,11 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const LoginPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => const LoginPage(),
+        '/home': (context) => const LoginPage(),
+      },
     );
   }
 }
